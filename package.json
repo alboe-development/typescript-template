@@ -1,0 +1,61 @@
+{
+  "name": "typescript-template",
+  "version": "0.0.0",
+  "description": "Typescript Template Repository",
+  "scripts": {
+    "build": "npm run transpile && npm run compile",
+    "build:ci": "npm run build:clean && npm run transpile && npm run compile",
+    "build:clean": "npm run transpile:clean && npm run compile:clean",
+    "build:watch": "npm run build && concurrently \"npm run transpile:watch\" \"npm run compile:watch\"",
+    "ci": "npm run build:ci && npm run docs:ci",
+    "clean": "npm run build:clean && npm run docs:clean",
+    "compile": "rollup -c ./rollup.config.js",
+    "compile:clean": "rimraf ./build",
+    "compile:watch": "rollup -c ./rollup.config.js -w",
+    "compress": "uglifyjs -c -o ./build/build.min.js ./build/build.js",
+    "docs": "npm run docs:clean && npm run docs:extract && npm run docs:generate",
+    "docs:ci": "npm run docs:clean && npm run docs:extract && npm run docs:generate && rimraf ./docs/temp",
+    "docs:clean": "rimraf ./docs",
+    "docs:extract": "api-extractor run -c ./api-extractor.json",
+    "docs:generate": "api-documenter markdown -i ./docs/temp -o ./docs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "tsc",
+    "transpile:clean": "rimraf ./dist",
+    "transpile:watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AlboeDev/typescript-template.git"
+  },
+  "author": "Alboe Development",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlboeDev/typescript-template/issues"
+  },
+  "homepage": "https://github.com/AlboeDev/typescript-template#readme",
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@microsoft/api-documenter": "^7.8.56",
+    "@microsoft/api-extractor": "^7.9.22",
+    "@rollup/plugin-typescript": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
+    "concurrently": "^5.3.0",
+    "eslint": "^7.9.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.2",
+    "eslint-plugin-jsdoc": "^30.5.2",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.28.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {}
+}
