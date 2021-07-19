@@ -1,6 +1,7 @@
 /**
  * Generic method.
  *
+ * @internal
  * @returns - The product of x and y.
  */
 export function methodA(): number {
@@ -13,6 +14,7 @@ export function methodA(): number {
 /**
  * Generic method.
  *
+ * @beta
  * @param x - The initial value of x.
  * @param y - The initial value of y.
  * @returns - The product of x and y.
