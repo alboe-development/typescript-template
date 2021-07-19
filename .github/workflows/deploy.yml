@@ -130,7 +130,6 @@ jobs:
           key: docs-${{ runner.os }}-${{ env.rid }}
 
       - name: Deploy Documentation
-        uses: actions/checkout@v2
         run: |
           git config --global user.name "Automation"
           git config --global user.email "automation@no-reply.com"
