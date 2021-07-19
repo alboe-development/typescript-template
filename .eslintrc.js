@@ -49,6 +49,7 @@ module.exports = {
         ],
       },
     ],
+    'jest/lowercase-name': 0,
     'jsdoc/check-tag-names': [
       1,
       {
