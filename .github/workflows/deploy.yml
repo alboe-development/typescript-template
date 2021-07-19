@@ -116,8 +116,6 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.APK }}
 
       - name: Setup Environment
         uses: actions/setup-node@v2
@@ -132,6 +130,7 @@ jobs:
           key: docs-${{ runner.os }}-${{ env.rid }}
 
       - name: Deploy Documentation
+        uses: actions/checkout@v2
         run: |
           git config --global user.name "Automation"
           git config --global user.email "automation@no-reply.com"
