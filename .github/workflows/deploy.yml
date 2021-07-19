@@ -1,0 +1,135 @@
+name: Deploy CD
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+env:
+  rid: ${{ github.run_id }}-${{ github.run_number }}
+
+jobs:
+  initialize:
+    name: Initialize
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Setup Environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          check-latest: true
+
+      - name: Validate Dependencies
+        id: validate-dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules/
+          key: node-modules-${{ runner.os }}-${{ env.rid }}
+
+      - name: Install Dependencies
+        if: steps.validate-dependencies.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        if: steps.validate-dependencies.outputs.cache-hit != 'true'
+        with:
+          path: node_modules/
+          key: node-modules-${{ runner.os }}-${{ env.rid }}
+
+  transpile:
+    name: Transpile
+    needs: initialize
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Setup Environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          check-latest: true
+
+      - name: Uncache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules/
+          key: node-modules-${{ runner.os }}-${{ env.rid }}
+
+      - name: Transpile
+        run: npm run transpile
+
+      - name: Cache Distributable
+        uses: actions/cache@v2
+        with:
+          path: dist/
+          key: dist-${{ runner.os }}-${{ env.rid }}
+
+  generate-documentation:
+    name: Generate Documentation
+    needs: transpile
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Setup Environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          check-latest: true
+
+      - name: Uncache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules/
+          key: node-modules-${{ runner.os }}-${{ env.rid }}
+
+      - name: Uncache Distributable
+        uses: actions/cache@v2
+        with:
+          path: dist/
+          key: dist-${{ runner.os }}-${{ env.rid }}
+
+      - name: Generate Documentation
+        run: npm run docs
+
+      - name: Cache Documentation
+        uses: actions/cache@v2
+        with:
+          path: docs/
+          key: docs-${{ runner.os }}-${{ env.rid }}
+
+  deploy-documentation:
+    name: Deploy Documentation
+    needs: generate-documentation
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Setup Environment
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          check-latest: true
+
+      - name: Uncache Documentation
+        uses: actions/cache@v2
+        with:
+          path: docs/
+          key: docs-${{ runner.os }}-${{ env.rid }}
+
+      - name: Deploy Documentation
+        run: |
+          git config --global user.name "Automation"
+          git config --global user.email "automation@no-reply.com"
+          git add ./docs
+          git commit -m "ci(docs): deploy documentation"
+          git push
+  
