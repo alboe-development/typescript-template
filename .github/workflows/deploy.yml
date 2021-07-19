@@ -116,8 +116,6 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.APK }}
 
       - name: Setup Environment
         uses: actions/setup-node@v2
