@@ -27,7 +27,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules/
-          key: node-modules-${{ runner.os }}-${{ hasFiles('**/package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install Dependencies
         if: steps.validate-dependencies.outputs.cache-hit != 'true'
@@ -38,7 +38,7 @@ jobs:
         if: steps.validate-dependencies.outputs.cache-hit != 'true'
         with:
           path: node_modules/
-          key: node-modules-${{ runner.os }}-${{ hasFiles('**/package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
   test-source:
     name: Test Source
@@ -58,7 +58,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules/
-          key: node-modules-${{ runner.os }}-${{ hasFiles('**/package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Test Source
         run: npm test
@@ -81,7 +81,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules/
-          key: node-modules-${{ runner.os }}-${{ hasFiles('**/package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Test Static
         run: npm run lint
@@ -104,7 +104,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: node_modules/
-          key: node-modules-${{ runner.os }}-${{ hasFiles('**/package-lock.json') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Test Validate
         run: npm run transpile:validate
